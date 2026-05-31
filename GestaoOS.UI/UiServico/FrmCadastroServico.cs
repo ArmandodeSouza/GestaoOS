@@ -88,6 +88,7 @@ namespace GestaoOS.UI.UiServico {
             _formatandoValor = false;
         }
 
+
         private async Task CarregarServicoAsync(int servicoId) {
 
             var resultado = await _servicoService.ObterPorIdAsync(servicoId);
