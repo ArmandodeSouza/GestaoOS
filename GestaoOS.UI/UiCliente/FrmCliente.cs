@@ -24,6 +24,7 @@ namespace GestaoOS.UI.UiCliente {
                 form.ShowDialog(this);
             }
         }
+
         private void btnNovo_Click(object sender, EventArgs e) {
             AbrirFormulario<FrmCadastroCliente>();
         }

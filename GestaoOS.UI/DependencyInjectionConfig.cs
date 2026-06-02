@@ -1,5 +1,6 @@
 ﻿using GestaoOS.Application.Interface;
 using GestaoOS.Application.Services;
+using GestaoOS.Infra.Repositories;
 using GestaoOS.Infrastructure.Data;
 using GestaoOS.Infrastructure.Repositories;
 using GestaoOS.Services.Interface;
@@ -19,10 +20,13 @@ namespace GestaoOS.UI {
             // Repositories
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<IServicoRepository, ServicoRepository>();
+            services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>();
+
 
             // Application Services
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IServicoService, ServicoService>();
+            services.AddScoped<IOrdemServicoService, OrdemServicoService>();
 
             // UI Forms
             services.AddTransient<FrmMain>();

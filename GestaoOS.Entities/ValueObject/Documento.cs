@@ -32,5 +32,6 @@ namespace GestaoOS.Domain.ValueObject {
 
             return new Documento(numero);
         }
+
     }
 }
