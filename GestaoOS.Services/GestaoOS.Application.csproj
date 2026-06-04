@@ -42,8 +42,14 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\ClientePesquisaDto.cs" />
+    <Compile Include="DTOs\OrdemServicoAtualizacaoDto.cs" />
+    <Compile Include="DTOs\OrdemServicoFiltroDto.cs" />
+    <Compile Include="DTOs\OrdemServicoItemCadastroDto.cs" />
+    <Compile Include="DTOs\OrdemServicoPesquisaDto.cs" />
     <Compile Include="DTOs\ServicoPesquisaDto.cs" />
     <Compile Include="DTOs\TipoPessoaDto.cs" />
+    <Compile Include="Enum\StatusOrdemServico.cs" />
+    <Compile Include="Enum\TipoPesquisaOrdemServico.cs" />
     <Compile Include="Interface\IAuditoriaRepository.cs" />
     <Compile Include="Interface\IClienteRepository.cs" />
     <Compile Include="Interface\IClienteService.cs" />
@@ -51,6 +57,7 @@
     <Compile Include="Interface\IOrdemServicoService.cs" />
     <Compile Include="Interface\IServicoRepository.cs" />
     <Compile Include="Interface\IServicoService.cs" />
+    <Compile Include="DTOs\OrdemServicoCadastroDto.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Result.cs" />
     <Compile Include="Services\ClienteService.cs" />
@@ -66,5 +73,6 @@
   <ItemGroup>
     <None Include="app.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

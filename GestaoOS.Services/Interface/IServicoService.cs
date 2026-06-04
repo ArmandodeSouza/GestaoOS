@@ -14,6 +14,6 @@ namespace GestaoOS.Services.Interface {
         Task<Result> ExcluirAsync(int servicoId);
         Task<Result<ServicoPesquisaDto>> ObterPorIdAsync(int servicoId);
         Task<Result<IReadOnlyCollection<ServicoPesquisaDto>>> PesquisarAsync(string nome, bool? ativo);
-
+        Task<Result<List<ServicoPesquisaDto>>> ListarServicoAsync();
     }
 }

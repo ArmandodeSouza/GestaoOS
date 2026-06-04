@@ -6,6 +6,7 @@ using GestaoOS.Infrastructure.Repositories;
 using GestaoOS.Services.Interface;
 using GestaoOS.Services.Services;
 using GestaoOS.UI.UiCliente;
+using GestaoOS.UI.UiOrdemServicoCadastro;
 using GestaoOS.UI.UiServico;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -34,6 +35,7 @@ namespace GestaoOS.UI {
             services.AddTransient<FrmCadastroCliente>();
             services.AddTransient<FrmServico>();
             services.AddTransient<FrmCadastroServico>();
+            services.AddTransient<FrmOrdemServicoCadastro>();
 
 
             return services.BuildServiceProvider();

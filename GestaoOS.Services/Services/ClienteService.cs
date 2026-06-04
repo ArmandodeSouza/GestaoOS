@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace GestaoOS.Application.Services {
     public sealed class ClienteService : IClienteService {
@@ -34,7 +35,7 @@ namespace GestaoOS.Application.Services {
             if (!telefoneResult.Success)
                 return Result.Fail(telefoneResult.Error);
 
-            if (!Enum.IsDefined(typeof(TipoPessoa), tipoPessoa))
+            if (!System.Enum.IsDefined(typeof(TipoPessoa), tipoPessoa))
                 return Result.Fail("Tipo de pessoa inválido.");
 
             var tipoPessoaEnum = (TipoPessoa)tipoPessoa;
@@ -53,7 +54,6 @@ namespace GestaoOS.Application.Services {
 
             return Result.Ok();
 
-
         }
 
         public async Task<Result> AtualizarAsync(int clienteId, string nome, string documento, int tipoPessoa, string email, string telefone, bool ativo) {
@@ -69,7 +69,7 @@ namespace GestaoOS.Application.Services {
             if (!telefoneResult.Success)
                 return Result.Fail(telefoneResult.Error);
 
-            if (!Enum.IsDefined(typeof(TipoPessoa), tipoPessoa))
+            if (!System.Enum.IsDefined(typeof(TipoPessoa), tipoPessoa))
                 return Result.Fail("Tipo de pessoa inválido.");
 
             var tipoPessoaEnum = (TipoPessoa)tipoPessoa;
@@ -83,6 +83,15 @@ namespace GestaoOS.Application.Services {
 
         public Task<Result> ExcluirAsync(int clienteId) {
             throw new NotImplementedException();
+        }
+
+        public async Task<Result<List<ClientePesquisaDto>>> ListarClienteAsync() {
+            var clientes = await _clienteRepository.ListarClienteAsync();
+
+            if (clientes == null || clientes.Count == 0)
+                return Result<List<ClientePesquisaDto>>.Fail("Nenhum cliente encontrado.");
+
+            return Result<List<ClientePesquisaDto>>.Ok(clientes);
         }
 
         public async Task<Result<ClientePesquisaDto>> ObterPorIdAsync(int clienteId) {
@@ -118,5 +127,6 @@ namespace GestaoOS.Application.Services {
 
             return Result<IReadOnlyCollection<ClientePesquisaDto>>.Ok(dto);
         }
+
     }
 }

@@ -1,4 +1,4 @@
-﻿using GestaoOS.Entities.Enum;
+﻿using GestaoOS.Domain.Enum;
 using System;
 
 namespace GestaoOS.Domain.Entities {
@@ -6,15 +6,15 @@ namespace GestaoOS.Domain.Entities {
         public int OrdemServicoHistoricoStatusId { get; private set; }
         public int OrdemServicoId { get; private set; }
 
-        public StatusOrdemServico? StatusAnterior { get; private set; }
-        public StatusOrdemServico StatusNovo { get; private set; }
+        public StatusOrdemServicoDom? StatusAnterior { get; private set; }
+        public StatusOrdemServicoDom StatusNovo { get; private set; }
 
         public DateTime DataHora { get; private set; }
         public string Usuario { get; private set; }
 
         private OrdemServicoHistoricoStatus() { }
 
-        public OrdemServicoHistoricoStatus(StatusOrdemServico statusAnterior, StatusOrdemServico statusNovo, string usuario) {
+        public OrdemServicoHistoricoStatus(StatusOrdemServicoDom statusAnterior, StatusOrdemServicoDom statusNovo, string usuario) {
             if (string.IsNullOrWhiteSpace(usuario))
                 throw new ArgumentException("Usuário é obrigatório.");
 
@@ -24,7 +24,7 @@ namespace GestaoOS.Domain.Entities {
             DataHora = DateTime.Now;
         }
 
-        public static OrdemServicoHistoricoStatus Reconstruir(int ordemServicoHistoricoStatusId, int ordemServicoId, StatusOrdemServico? statusAnterior, StatusOrdemServico statusNovo, DateTime dataHora, string usuario) {
+        public static OrdemServicoHistoricoStatus Reconstruir(int ordemServicoHistoricoStatusId, int ordemServicoId, StatusOrdemServicoDom? statusAnterior, StatusOrdemServicoDom statusNovo, DateTime dataHora, string usuario) {
             return new OrdemServicoHistoricoStatus {
                 OrdemServicoHistoricoStatusId = ordemServicoHistoricoStatusId,
                 OrdemServicoId = ordemServicoId,

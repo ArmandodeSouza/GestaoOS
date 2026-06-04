@@ -68,6 +68,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DependencyInjectionConfig.cs" />
+    <Compile Include="DTO\ClientePesquisaNaOsDto.cs" />
+    <Compile Include="DTO\OrdemServicoItemGridDto.cs" />
+    <Compile Include="DTO\PesquisaOrdemServicoDto.cs" />
     <Compile Include="Enums\StatusCliente.cs" />
     <Compile Include="Enums\StatusServico.cs" />
     <Compile Include="FrmMain.cs">
@@ -91,6 +94,13 @@
     <Compile Include="UiCliente\FrmCliente.Designer.cs">
       <DependentUpon>FrmCliente.cs</DependentUpon>
     </Compile>
+    <Compile Include="UiOrdemServicoCadastro\FrmOrdemServicoCadastro.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="UiOrdemServicoCadastro\FrmOrdemServicoCadastro.Designer.cs">
+      <DependentUpon>FrmOrdemServicoCadastro.cs</DependentUpon>
+    </Compile>
+    <Compile Include="UiOrdemServicoCadastro\OrdemServicoItemDto.cs" />
     <Compile Include="UiServico\FrmCadastroServico.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -120,6 +130,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="UiCliente\FrmCliente.resx">
       <DependentUpon>FrmCliente.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="UiOrdemServicoCadastro\FrmOrdemServicoCadastro.resx">
+      <DependentUpon>FrmOrdemServicoCadastro.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="UiServico\FrmCadastroServico.resx">
       <DependentUpon>FrmCadastroServico.cs</DependentUpon>

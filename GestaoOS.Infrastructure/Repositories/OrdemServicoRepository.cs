@@ -1,6 +1,8 @@
-﻿using GestaoOS.Domain.Entities;
-using GestaoOS.Entities.Enum;
+﻿using GestaoOS.Application.Enum;
+using GestaoOS.Domain.Entities;
+using GestaoOS.Domain.Enum;
 using GestaoOS.Infrastructure.Data;
+using GestaoOS.Services.DTOs;
 using GestaoOS.Services.Interface;
 using Npgsql;
 using System;
@@ -165,9 +167,11 @@ namespace GestaoOS.Infra.Repositories {
 
                         await InserirItensAsync(connection, transaction, ordemServico.OrdemServicoId, ordemServico);
 
-                        await InserirHistoricosAsync(connection, transaction, ordemServico.OrdemServicoId, ordemServico);
+                        await InserirHistoricosNovosAsync(connection, transaction, ordemServico.OrdemServicoId, ordemServico);
 
                         transaction.Commit();
+
+                        ordemServico.IncrementarVersao();
                     } catch {
                         transaction.Rollback();
                         throw;
@@ -318,8 +322,8 @@ namespace GestaoOS.Infra.Repositories {
                         var historico = OrdemServicoHistoricoStatus.Reconstruir(
                             Convert.ToInt32(reader["historico_status_id"]),
                             Convert.ToInt32(reader["ordem_servico_id"]),
-                            reader["status_anterior"] == DBNull.Value ? (StatusOrdemServico?)null : (StatusOrdemServico)Convert.ToInt32(reader["status_anterior"]),
-                            (StatusOrdemServico)Convert.ToInt32(reader["status_novo"]),
+                            reader["status_anterior"] == DBNull.Value ? (StatusOrdemServicoDom?)null : (StatusOrdemServicoDom)Convert.ToInt32(reader["status_anterior"]),
+                            (StatusOrdemServicoDom)Convert.ToInt32(reader["status_novo"]),
                             Convert.ToDateTime(reader["data_hora"]),
                             reader["usuario"] == DBNull.Value ? null : reader["usuario"].ToString());
 
@@ -331,12 +335,6 @@ namespace GestaoOS.Infra.Repositories {
 
         public async Task<IList<OrdemServico>> ListarAsync(int? clienteId, int? status, int pagina, int tamanhoPagina) {
             var ordens = new List<OrdemServico>();
-
-            if (pagina <= 0)
-                pagina = 1;
-
-            if (tamanhoPagina <= 0)
-                tamanhoPagina = 20;
 
             var offset = (pagina - 1) * tamanhoPagina;
 
@@ -384,11 +382,131 @@ namespace GestaoOS.Infra.Repositories {
                 Convert.ToInt32(reader["cliente_id"]),
                 Convert.ToDateTime(reader["data_abertura"]),
                 reader["data_conclusao"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["data_conclusao"]),
-                (StatusOrdemServico)Convert.ToInt32(reader["status"]),
+                (StatusOrdemServicoDom)Convert.ToInt32(reader["status"]),
                 reader["observacao"] == DBNull.Value ? null : reader["observacao"].ToString(),
                 Convert.ToDecimal(reader["valor_total"]),
                 Convert.ToInt32(reader["versao"]));
         }
 
+        private async Task InserirHistoricosNovosAsync(NpgsqlConnection connection, NpgsqlTransaction transaction, int ordemServicoId, OrdemServico ordemServico) {
+
+            const string sql = @"
+        INSERT INTO gestao.historico_status
+        (
+            ordem_servico_id,
+            status_anterior,
+            status_novo,
+            data_hora,
+            usuario
+        )
+        VALUES
+        (
+            @ordem_servico_id,
+            @status_anterior,
+            @status_novo,
+            @data_hora,
+            @usuario
+        );
+    ";
+
+            foreach (var historico in ordemServico.Historicos) {
+                if (historico.OrdemServicoHistoricoStatusId > 0)
+                    continue;
+
+                using (var command = new NpgsqlCommand(sql, connection, transaction)) {
+                    command.Parameters.AddWithValue("@ordem_servico_id", ordemServicoId);
+                    command.Parameters.AddWithValue("@status_anterior", historico.StatusAnterior.HasValue ? (object)(int)historico.StatusAnterior.Value : DBNull.Value);
+                    command.Parameters.AddWithValue("@status_novo", (int)historico.StatusNovo);
+                    command.Parameters.AddWithValue("@data_hora", historico.DataHora);
+                    command.Parameters.AddWithValue("@usuario", (object)historico.Usuario ?? DBNull.Value);
+
+                    await command.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        public async Task<IList<OrdemServicoPesquisaDto>> PesquisarAsync(OrdemServicoFiltroDto filtro) {
+            var ordens = new List<OrdemServicoPesquisaDto>();
+
+            var offset = (filtro.Pagina - 1) * filtro.TamanhoPagina;
+
+            var sql = @"
+        SELECT
+            os.ordem_servico_id,
+            c.nome AS cliente,
+            os.data_abertura,
+            os.status,
+            os.valor_total
+        FROM gestao.ordem_servico os
+        INNER JOIN gestao.cliente c
+            ON c.cliente_id = os.cliente_id
+        WHERE os.data_abertura >= @data_inicial
+          AND os.data_abertura < @data_final
+    ";
+
+            if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.OS) {
+                sql += " AND os.ordem_servico_id = @ordem_servico_id ";
+            }
+
+            if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Cliente) {
+                sql += " AND os.cliente_id = @cliente_id ";
+            }
+
+            if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Status) {
+                sql += " AND os.status = @status ";
+            }
+
+            sql += @"
+        ORDER BY os.ordem_servico_id DESC
+        LIMIT @limit
+        OFFSET @offset;
+    ";
+
+            using (var connection = _connectionFactory.CriarConexao()) {
+                await connection.OpenAsync();
+
+                using (var command = new NpgsqlCommand(sql, connection)) {
+                    command.Parameters.AddWithValue("@data_inicial", filtro.DataInicial.Date);
+                    command.Parameters.AddWithValue("@data_final", filtro.DataFinal.Date.AddDays(1));
+                    command.Parameters.AddWithValue("@limit", filtro.TamanhoPagina);
+                    command.Parameters.AddWithValue("@offset", offset);
+
+                    if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.OS) {
+                        command.Parameters.AddWithValue(
+                            "@ordem_servico_id",
+                            filtro.OrdemServicoId.Value
+                        );
+                    }
+
+                    if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Cliente) {
+                        command.Parameters.AddWithValue(
+                            "@cliente_id",
+                            filtro.ClienteId.Value
+                        );
+                    }
+
+                    if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Status) {
+                        command.Parameters.AddWithValue(
+                            "@status",
+                            filtro.Status.Value
+                        );
+                    }
+
+                    using (var reader = await command.ExecuteReaderAsync()) {
+                        while (await reader.ReadAsync()) {
+                            ordens.Add(new OrdemServicoPesquisaDto {
+                                OrdemServicoId = Convert.ToInt32(reader["ordem_servico_id"]),
+                                Cliente = reader["cliente"].ToString(),
+                                DataAbertura = Convert.ToDateTime(reader["data_abertura"]),
+                                Status = ((StatusOrdemServico)Convert.ToInt32(reader["status"])).ToString(),
+                                ValorTotal = Convert.ToDecimal(reader["valor_total"])
+                            });
+                        }
+                    }
+                }
+            }
+
+            return ordens;
+        }
     }
 }

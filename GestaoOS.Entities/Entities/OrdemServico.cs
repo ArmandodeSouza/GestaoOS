@@ -1,4 +1,4 @@
-﻿using GestaoOS.Entities.Enum;
+﻿using GestaoOS.Domain.Enum;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +12,7 @@ namespace GestaoOS.Domain.Entities {
         public int ClienteId { get; private set; }
         public DateTime DataAbertura { get; private set; }
         public DateTime? DataConclusao { get; private set; }
-        public StatusOrdemServico Status { get; private set; }
+        public StatusOrdemServicoDom Status { get; private set; }
         public string Observacao { get; private set; }
         public decimal ValorTotal { get; private set; }
         public int Versao { get; private set; }
@@ -30,12 +30,12 @@ namespace GestaoOS.Domain.Entities {
             ClienteId = clienteId;
             Observacao = observacao == null ? null : observacao.Trim();
             DataAbertura = DateTime.Now;
-            Status = StatusOrdemServico.Aberta;
+            Status = StatusOrdemServicoDom.Aberta;
             Versao = 1;
             ValorTotal = 0;
         }
 
-        public static OrdemServico Reconstruir(int ordemServicoId, int clienteId, DateTime dataAbertura, DateTime? dataConclusao, StatusOrdemServico status, string observacao, decimal valorTotal, int versao) {
+        public static OrdemServico Reconstruir(int ordemServicoId, int clienteId, DateTime dataAbertura, DateTime? dataConclusao, StatusOrdemServicoDom status, string observacao, decimal valorTotal, int versao) {
             return new OrdemServico {
                 OrdemServicoId = ordemServicoId,
                 ClienteId = clienteId,
@@ -88,14 +88,14 @@ namespace GestaoOS.Domain.Entities {
         }
 
         public void Iniciar(string usuario) {
-            if (Status != StatusOrdemServico.Aberta)
+            if (Status != StatusOrdemServicoDom.Aberta)
                 throw new InvalidOperationException("Somente OS aberta pode ser iniciada.");
 
-            AlterarStatus(StatusOrdemServico.EmAndamento, usuario);
+            AlterarStatus(StatusOrdemServicoDom.EmAndamento, usuario);
         }
 
         public void Concluir(string usuario) {
-            if (Status == StatusOrdemServico.Cancelada)
+            if (Status == StatusOrdemServicoDom.Cancelada)
                 throw new InvalidOperationException("OS cancelada não pode ser concluída.");
 
             if (!_itens.Any())
@@ -106,15 +106,15 @@ namespace GestaoOS.Domain.Entities {
             if (ValorTotal <= 0)
                 throw new InvalidOperationException("Não é possível concluir uma OS com valor total zerado.");
 
-            AlterarStatus(StatusOrdemServico.Concluida, usuario);
+            AlterarStatus(StatusOrdemServicoDom.Concluida, usuario);
             DataConclusao = DateTime.Now;
         }
 
         public void Cancelar(string usuario) {
-            if (Status == StatusOrdemServico.Concluida)
+            if (Status == StatusOrdemServicoDom.Concluida)
                 throw new InvalidOperationException("OS concluída não pode ser cancelada.");
 
-            AlterarStatus(StatusOrdemServico.Cancelada, usuario);
+            AlterarStatus(StatusOrdemServicoDom.Cancelada, usuario);
         }
 
         private void RecalcularTotal() {
@@ -122,10 +122,10 @@ namespace GestaoOS.Domain.Entities {
         }
 
         private void ValidarPermiteAlteracao() {
-            if (Status == StatusOrdemServico.Concluida)
+            if (Status == StatusOrdemServicoDom.Concluida)
                 throw new InvalidOperationException("Não é permitido alterar uma OS concluída.");
 
-            if (Status == StatusOrdemServico.Cancelada)
+            if (Status == StatusOrdemServicoDom.Cancelada)
                 throw new InvalidOperationException("Não é permitido alterar uma OS cancelada.");
         }
         public IReadOnlyCollection<OrdemServicoHistoricoStatus> Historicos {
@@ -149,7 +149,7 @@ namespace GestaoOS.Domain.Entities {
             RecalcularTotal();
         }
 
-        private void AlterarStatus(StatusOrdemServico novoStatus, string usuario) {
+        private void AlterarStatus(StatusOrdemServicoDom novoStatus, string usuario) {
             if (string.IsNullOrWhiteSpace(usuario))
                 throw new ArgumentException("Usuário é obrigatório.");
 

@@ -4,8 +4,8 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GestaoOS.Entities.Enum {
-    public enum StatusOrdemServico {
+namespace GestaoOS.Domain.Enum {
+    public enum StatusOrdemServicoDom {
 
         Aberta = 1,
         EmAndamento = 2,

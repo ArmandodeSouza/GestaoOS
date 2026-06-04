@@ -3,6 +3,7 @@ using GestaoOS.Domain.Entities.Cliente;
 using GestaoOS.Domain.Entities.Enum;
 using GestaoOS.Domain.ValueObject;
 using GestaoOS.Infrastructure.Data;
+using GestaoOS.Services.DTOs;
 using Npgsql;
 using System;
 using System.Collections.Generic;
@@ -136,10 +137,7 @@ namespace GestaoOS.Infrastructure.Repositories {
             }
         }
 
-        public async Task<IReadOnlyCollection<Cliente>> PesquisarAsync(
-            string nome,
-            string documento,
-            bool? ativo) {
+        public async Task<IReadOnlyCollection<Cliente>> PesquisarAsync(string nome, string documento, bool? ativo) {
             var sql = new StringBuilder(@"
                 SELECT
                     cliente_id,
@@ -190,6 +188,43 @@ namespace GestaoOS.Infrastructure.Repositories {
             return clientes;
         }
 
+        public async Task<List<ClientePesquisaDto>> ListarClienteAsync() {
+            var clientes = new List<ClientePesquisaDto>();
+
+            const string sql = @"
+        SELECT
+            cliente_id,
+            nome,
+            documento,
+            tipo_pessoa,
+            email,
+            telefone,
+            ativo
+        FROM gestao.cliente
+        WHERE ativo = TRUE
+        ORDER BY nome";
+
+            using (var connection = _connectionFactory.CriarConexao()) {
+                await connection.OpenAsync();
+
+                using (var command = new NpgsqlCommand(sql, connection))
+                using (var reader = await command.ExecuteReaderAsync()) {
+
+                    while (await reader.ReadAsync()) {
+                        clientes.Add(new ClientePesquisaDto {
+                            ClienteId = reader.GetInt32(0),
+                            Nome = reader.GetString(1),
+                            Documento = reader.GetString(2),
+                            TipoPessoa = reader.GetInt16(3),
+                            Email = reader.GetString(4),
+                            Telefone = reader.GetString(5),
+                            Ativo = reader.GetBoolean(6)
+                        });
+                    }
+                }
+            }
+            return clientes;
+        }
         private static Cliente MapearCliente(NpgsqlDataReader reader) {
             var documento = Documento.Reconstruir(
                 reader.GetString(reader.GetOrdinal("documento")));
@@ -209,5 +244,7 @@ namespace GestaoOS.Infrastructure.Repositories {
                 telefone,
                 reader.GetBoolean(reader.GetOrdinal("ativo")));
         }
+
+
     }
 }

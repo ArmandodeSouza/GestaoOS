@@ -36,6 +36,15 @@ namespace GestaoOS.Services.Services {
             throw new System.NotImplementedException();
         }
 
+        public async Task<Result<List<ServicoPesquisaDto>>> ListarServicoAsync() {
+            var servicos = await _servicoRepository.ListarServicoAsync();
+
+            if (servicos == null || servicos.Count == 0)
+                return Result<List<ServicoPesquisaDto>>.Fail("Nenhum serviço encontrado.");
+
+            return Result<List<ServicoPesquisaDto>>.Ok(servicos);
+        }
+
         public async Task<Result<ServicoPesquisaDto>> ObterPorIdAsync(int servicoId) {
             var servico = await _servicoRepository.ObterPorIdAsync(servicoId);
 

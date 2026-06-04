@@ -11,5 +11,6 @@ namespace GestaoOS.Application.Interface {
         Task<Result> AtualizarAsync(int clienteId, string nome, string documento, int tipoPessoa, string email, string telefone, bool ativo);
         Task<Result> ExcluirAsync(int clienteId);
         Task<Result<IReadOnlyCollection<ClientePesquisaDto>>> PesquisarAsync(string nome, string documento, bool? ativo);
+        Task<Result<List<ClientePesquisaDto>>> ListarClienteAsync();
     }
 }

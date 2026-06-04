@@ -1,4 +1,5 @@
 ﻿using GestaoOS.Domain.Entities.Cliente;
+using GestaoOS.Services.DTOs;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -13,5 +14,7 @@ namespace GestaoOS.Application.Interface {
         Task ExcluirAsync(int clienteId);
 
         Task<IReadOnlyCollection<Cliente>> PesquisarAsync(string nome, string documento, bool? ativo);
+
+        Task<List<ClientePesquisaDto>> ListarClienteAsync();
     }
 }

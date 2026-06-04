@@ -48,7 +48,7 @@
     <Compile Include="Entities\OrdemServicoHistoricoStatus.cs" />
     <Compile Include="Entities\OrdemServicoItem.cs" />
     <Compile Include="Entities\Servico.cs" />
-    <Compile Include="Enum\StatusOrdemServico.cs" />
+    <Compile Include="Enum\StatusOrdemServicoDom.cs" />
     <Compile Include="Enum\TipoPessoa.cs" />
     <Compile Include="Enum\TipoTelefone.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

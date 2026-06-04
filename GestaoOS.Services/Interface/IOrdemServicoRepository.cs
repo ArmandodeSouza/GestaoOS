@@ -1,4 +1,5 @@
 ﻿using GestaoOS.Domain.Entities;
+using GestaoOS.Services.DTOs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,5 +15,7 @@ namespace GestaoOS.Services.Interface {
         Task<OrdemServico> ObterPorIdAsync(int ordemServicoId);
 
         Task<IList<OrdemServico>> ListarAsync(int? clienteId, int? status, int pagina, int tamanhoPagina);
+
+        Task<IList<OrdemServicoPesquisaDto>> PesquisarAsync(OrdemServicoFiltroDto filtro);
     }
 }

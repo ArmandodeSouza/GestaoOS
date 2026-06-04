@@ -1,7 +1,10 @@
-﻿using GestaoOS.Application.Interface;
+﻿using GestaoOS.Application;
+using GestaoOS.Application.Interface;
 using GestaoOS.Domain.Entities;
+using GestaoOS.Domain.Entities.Cliente;
 using GestaoOS.Entities.Entities;
 using GestaoOS.Infrastructure.Data;
+using GestaoOS.Services.DTOs;
 using GestaoOS.Services.Interface;
 using Npgsql;
 using System;
@@ -86,6 +89,40 @@ namespace GestaoOS.Infrastructure.Repositories {
                     await command.ExecuteNonQueryAsync();
                 }
             }
+        }
+
+        public async Task<List<ServicoPesquisaDto>> ListarServicoAsync() {
+            var servicos = new List<ServicoPesquisaDto>();
+
+            const string sql = @"
+                SELECT
+                    servico_id,
+                    nome,
+                    valor_base,
+                    percentual_imposto,
+                    ativo      
+                FROM gestao.servico
+                WHERE ativo = true
+                ORDER BY nome;";
+
+            using (var connection = _connectionFactory.CriarConexao()) {
+                await connection.OpenAsync();
+
+                using (var command = new NpgsqlCommand(sql, connection))
+                using (var reader = await command.ExecuteReaderAsync()) {
+
+                    while (await reader.ReadAsync()) {
+                        servicos.Add(new ServicoPesquisaDto {
+                            ServicoId = reader.GetInt32(0),
+                            Nome = reader.GetString(1),
+                            ValorBase = reader.GetDecimal(2),
+                            PercentualImposto = reader.GetDecimal(3),
+                            Ativo = reader.GetBoolean(4)
+                        });
+                    }
+                }
+            }
+            return servicos;
         }
 
         public async Task<Servico> ObterPorIdAsync(int servicoId) {

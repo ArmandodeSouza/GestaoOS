@@ -6,8 +6,7 @@ namespace GestaoOS.Infrastructure.Data {
         private readonly string _connectionString;
 
         public DbConnectionFactory() {
-            var connectionString =
-                ConfigurationManager.ConnectionStrings["DefaultConnection"];
+            var connectionString = ConfigurationManager.ConnectionStrings["DefaultConnection"];
 
             if (connectionString == null)
                 throw new ConfigurationErrorsException("Connection string 'DefaultConnection' não encontrada.");

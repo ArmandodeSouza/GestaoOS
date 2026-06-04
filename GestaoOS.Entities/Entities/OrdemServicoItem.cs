@@ -53,9 +53,6 @@ namespace GestaoOS.Domain.Entities {
             if (valorUnitario < 0)
                 throw new ArgumentException("Valor unitário inválido.");
 
-            if (percentualImpostoAplicado < 0 || percentualImpostoAplicado > 100)
-                throw new ArgumentException("Percentual de imposto inválido.");
-
             Quantidade = quantidade;
             ValorUnitario = valorUnitario;
             PercentualImpostoAplicado = percentualImpostoAplicado;
@@ -65,7 +62,7 @@ namespace GestaoOS.Domain.Entities {
 
         private void RecalcularTotal() {
             var subtotal = Quantidade * ValorUnitario;
-            var imposto = subtotal * (PercentualImpostoAplicado / 100m);
+            var imposto = subtotal + PercentualImpostoAplicado;
 
             ValorTotalItem = subtotal + imposto;
         }
