@@ -2,6 +2,7 @@
 using GestaoOS.Application.Interface;
 using GestaoOS.Services.DTOs;
 using GestaoOS.Services.Interface;
+using GestaoOS.Services.Services;
 using GestaoOS.UI.Enums;
 using GestaoOS.UI.UiCliente;
 using GestaoOS.UI.UiOrdemServicoCadastro;
@@ -34,6 +35,9 @@ namespace GestaoOS.UI {
             _serviceProvider = serviceProvider;
             _ordemServicoService = ordemServicoService;
         }
+
+
+
         private void AbrirFormulario<T>() where T : Form {
             using (var form = _serviceProvider.GetRequiredService<T>()) {
                 form.StartPosition = FormStartPosition.CenterParent;
@@ -44,13 +48,14 @@ namespace GestaoOS.UI {
         private void FrmMain_Load(object sender, System.EventArgs e) {
             cmbTipoPesquisaOs.DataSource = Enum.GetValues(typeof(TipoPesquisaOrdemServico));
             cmbTipoPesquisaOs.SelectedItem = TipoPesquisaOrdemServico.Todas;
+            txtPesquisa.Enabled = false;
 
             cmbStatusOs.Visible = false;
 
             dtpDataInicial.Value = DateTime.UtcNow;
             dtpDataFinal.Value = DateTime.UtcNow;
 
-            ConfigurarGrid();
+            ConfigurarGridOs();
         }
 
         private void pesquisarToolStripMenuItem_Click(object sender, System.EventArgs e) {
@@ -75,8 +80,14 @@ namespace GestaoOS.UI {
             cmbStatusOs.Visible = tipoPesquisa == TipoPesquisaOrdemServico.Status;
             txtPesquisa.Visible = tipoPesquisa != TipoPesquisaOrdemServico.Status;
 
-            cmbStatusOs.DataSource = Enum.GetValues(typeof(StatusServico));
-            cmbStatusOs.SelectedItem = StatusServico.Todos;
+            if (cmbTipoPesquisaOs.SelectedItem.Equals(TipoPesquisaOrdemServico.Todas)) {
+                txtPesquisa.Enabled = false;
+            } else {
+                txtPesquisa.Enabled = true;
+            }
+
+            cmbStatusOs.DataSource = Enum.GetValues(typeof(StatusOrdemServico));
+            cmbStatusOs.SelectedItem = StatusOrdemServico.Aberta;
 
 
         }
@@ -92,7 +103,7 @@ namespace GestaoOS.UI {
             VerificarData();
         }
 
-        private void ConfigurarGrid() {
+        private void ConfigurarGridOs() {
             dgvOs.AutoGenerateColumns = false;
             dgvOs.AllowUserToAddRows = false;
             dgvOs.AllowUserToDeleteRows = false;
@@ -100,14 +111,9 @@ namespace GestaoOS.UI {
             dgvOs.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
             dgvOs.MultiSelect = false;
             dgvOs.RowHeadersVisible = false;
-            dgvOs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.None;
-
-            dgvOs.Anchor = AnchorStyles.Top
-                | AnchorStyles.Bottom
-                | AnchorStyles.Left
-                | AnchorStyles.Right;
 
             dgvOs.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+            dgvOs.AutoSizeRowsMode = DataGridViewAutoSizeRowsMode.None;
 
             dgvOs.Columns.Clear();
 
@@ -115,61 +121,47 @@ namespace GestaoOS.UI {
                 Name = "colOrdemServicoId",
                 HeaderText = "OS",
                 DataPropertyName = "OrdemServicoId",
-                FillWeight = 70
+                FillWeight = 10
             });
 
             dgvOs.Columns.Add(new DataGridViewTextBoxColumn {
-                Name = "colClienteId",
+                Name = "colCliente",
                 HeaderText = "Cliente",
-                DataPropertyName = "ClienteId",
-                FillWeight = 80
+                DataPropertyName = "Cliente",
+                FillWeight = 30
             });
 
             dgvOs.Columns.Add(new DataGridViewTextBoxColumn {
                 Name = "colDataAbertura",
                 HeaderText = "Abertura",
                 DataPropertyName = "DataAbertura",
-                FillWeight = 120,
-                DefaultCellStyle = new DataGridViewCellStyle {
-                    Format = "dd/MM/yyyy"
-                }
+                FillWeight = 15,
+                DefaultCellStyle = { Format = "dd/MM/yyyy" }
             });
 
             dgvOs.Columns.Add(new DataGridViewTextBoxColumn {
                 Name = "colDataConclusao",
                 HeaderText = "Conclusão",
-                DataPropertyName = "DataConclusao",
-                FillWeight = 120,
-                DefaultCellStyle = new DataGridViewCellStyle {
-                    Format = "dd/MM/yyyy"
-                }
+                DataPropertyName = "DataFechamento",
+                FillWeight = 15,
+                DefaultCellStyle = { Format = "dd/MM/yyyy" }
             });
 
             dgvOs.Columns.Add(new DataGridViewTextBoxColumn {
                 Name = "colStatus",
                 HeaderText = "Status",
                 DataPropertyName = "Status",
-                FillWeight = 120
+                FillWeight = 15
             });
 
             dgvOs.Columns.Add(new DataGridViewTextBoxColumn {
                 Name = "colValorTotal",
                 HeaderText = "Valor Total",
                 DataPropertyName = "ValorTotal",
-                FillWeight = 120,
-                DefaultCellStyle = new DataGridViewCellStyle {
-                    Format = "C2"
-                }
+                FillWeight = 15,
+                DefaultCellStyle = { Format = "C2" }
             });
 
-            dgvOs.Columns.Add(new DataGridViewTextBoxColumn {
-                Name = "colVersao",
-                HeaderText = "Versão",
-                DataPropertyName = "Versao",
-                FillWeight = 70
-            });
-
-            dgvOs.DataSource = _bindingSource;
         }
 
         private void btnNovaOs_Click(object sender, EventArgs e) {
@@ -204,21 +196,14 @@ namespace GestaoOS.UI {
             }
 
             if (tipoPesquisa == TipoPesquisaOrdemServico.Cliente) {
-                var textoCliente = txtPesquisa.Text.Trim();
+                var nomeCliente = txtPesquisa.Text.Trim();
 
-                if (string.IsNullOrWhiteSpace(textoCliente)) {
+                if (string.IsNullOrWhiteSpace(nomeCliente)) {
                     MessageBox.Show("Informe o nome do cliente.");
                     return;
                 }
 
-                var cliente = _clientes.FirstOrDefault(x => x.Nome.Equals(textoCliente, StringComparison.OrdinalIgnoreCase));
-
-                if (cliente == null) {
-                    MessageBox.Show("Cliente não encontrado.");
-                    return;
-                }
-
-                filtro.ClienteId = cliente.ClienteId;
+                filtro.Cliente = nomeCliente;
             }
 
             if (tipoPesquisa == TipoPesquisaOrdemServico.Status) {
@@ -227,7 +212,7 @@ namespace GestaoOS.UI {
                     return;
                 }
 
-                filtro.Status = (StatusOrdemServico?)(int)(StatusOrdemServico)cmbStatusOs.SelectedItem;
+                filtro.Status = (StatusOrdemServico)cmbStatusOs.SelectedItem;
             }
 
             var resultado = await _ordemServicoService.PesquisarAsync(filtro);
@@ -237,8 +222,30 @@ namespace GestaoOS.UI {
                 return;
             }
 
-            dgvOs.DataSource = null;
-            dgvOs.DataSource = resultado.Value;
+            _bindingSource.DataSource = resultado.Value;
+            dgvOs.DataSource = _bindingSource;
         }
+
+        private async void btnEditarOs_Click(object sender, EventArgs e) {
+            await EditarOrdemServicoAsync();
+        }
+
+        private async Task EditarOrdemServicoAsync() {
+            var ordemServico = _bindingSource.Current as OrdemServicoPesquisaDto;
+
+            if (ordemServico == null) {
+                MessageBox.Show("Selecione uma OS para editar.");
+                return;
+            }
+
+            var form = _serviceProvider.GetRequiredService<FrmOrdemServicoCadastro>();
+
+            form.CarregarParaEdicao(ordemServico.OrdemServicoId);
+
+            form.ShowDialog();
+
+            _ = PesquisarAsync();
+        }
+
     }
 }

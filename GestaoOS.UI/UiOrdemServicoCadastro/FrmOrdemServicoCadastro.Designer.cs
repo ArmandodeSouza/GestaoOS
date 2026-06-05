@@ -52,15 +52,15 @@
             this.tblBot = new System.Windows.Forms.TableLayoutPanel();
             this.pnlValorTotal = new System.Windows.Forms.Panel();
             this.lblValorTotalNum = new System.Windows.Forms.Label();
+            this.btnCancelarOs = new System.Windows.Forms.Button();
             this.lblValorTotal = new System.Windows.Forms.Label();
             this.btnVoltar = new System.Windows.Forms.Button();
             this.pnlBtnSalvar = new System.Windows.Forms.Panel();
+            this.btnReabrirOs = new System.Windows.Forms.Button();
             this.btnFinalizarOs = new System.Windows.Forms.Button();
             this.btnSalvarOs = new System.Windows.Forms.Button();
             this.tblMid = new System.Windows.Forms.TableLayoutPanel();
             this.dgvItensOS = new System.Windows.Forms.DataGridView();
-            this.btnCancelarOs = new System.Windows.Forms.Button();
-            this.btnReabrirOs = new System.Windows.Forms.Button();
             this.tblTop.SuspendLayout();
             this.pnlPesquisa1.SuspendLayout();
             this.pnlPesquisa2.SuspendLayout();
@@ -398,6 +398,16 @@
             this.lblValorTotalNum.TabIndex = 1;
             this.lblValorTotalNum.Text = "R$:";
             // 
+            // btnCancelarOs
+            // 
+            this.btnCancelarOs.Location = new System.Drawing.Point(3, 18);
+            this.btnCancelarOs.Name = "btnCancelarOs";
+            this.btnCancelarOs.Size = new System.Drawing.Size(75, 23);
+            this.btnCancelarOs.TabIndex = 7;
+            this.btnCancelarOs.Text = "Cancelar OS";
+            this.btnCancelarOs.UseVisualStyleBackColor = true;
+            this.btnCancelarOs.Click += new System.EventHandler(this.btnCancelarOs_Click);
+            // 
             // lblValorTotal
             // 
             this.lblValorTotal.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -428,6 +438,16 @@
             this.pnlBtnSalvar.Name = "pnlBtnSalvar";
             this.pnlBtnSalvar.Size = new System.Drawing.Size(394, 44);
             this.pnlBtnSalvar.TabIndex = 7;
+            // 
+            // btnReabrirOs
+            // 
+            this.btnReabrirOs.Enabled = false;
+            this.btnReabrirOs.Location = new System.Drawing.Point(84, 12);
+            this.btnReabrirOs.Name = "btnReabrirOs";
+            this.btnReabrirOs.Size = new System.Drawing.Size(75, 23);
+            this.btnReabrirOs.TabIndex = 8;
+            this.btnReabrirOs.Text = "Reabrir OS";
+            this.btnReabrirOs.UseVisualStyleBackColor = true;
             // 
             // btnFinalizarOs
             // 
@@ -473,25 +493,6 @@
             this.dgvItensOS.Name = "dgvItensOS";
             this.dgvItensOS.Size = new System.Drawing.Size(794, 120);
             this.dgvItensOS.TabIndex = 0;
-            // 
-            // btnCancelarOs
-            // 
-            this.btnCancelarOs.Location = new System.Drawing.Point(3, 18);
-            this.btnCancelarOs.Name = "btnCancelarOs";
-            this.btnCancelarOs.Size = new System.Drawing.Size(75, 23);
-            this.btnCancelarOs.TabIndex = 7;
-            this.btnCancelarOs.Text = "Cancelar OS";
-            this.btnCancelarOs.UseVisualStyleBackColor = true;
-            // 
-            // btnReabrirOs
-            // 
-            this.btnReabrirOs.Enabled = false;
-            this.btnReabrirOs.Location = new System.Drawing.Point(84, 12);
-            this.btnReabrirOs.Name = "btnReabrirOs";
-            this.btnReabrirOs.Size = new System.Drawing.Size(75, 23);
-            this.btnReabrirOs.TabIndex = 8;
-            this.btnReabrirOs.Text = "Reabrir OS";
-            this.btnReabrirOs.UseVisualStyleBackColor = true;
             // 
             // FrmOrdemServicoCadastro
             // 

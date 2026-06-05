@@ -43,8 +43,10 @@
   <ItemGroup>
     <Compile Include="DTOs\ClientePesquisaDto.cs" />
     <Compile Include="DTOs\OrdemServicoAtualizacaoDto.cs" />
+    <Compile Include="DTOs\OrdemServicoEdicaoDto.cs" />
     <Compile Include="DTOs\OrdemServicoFiltroDto.cs" />
     <Compile Include="DTOs\OrdemServicoItemCadastroDto.cs" />
+    <Compile Include="DTOs\OrdemServicoItemEdicaoDto.cs" />
     <Compile Include="DTOs\OrdemServicoPesquisaDto.cs" />
     <Compile Include="DTOs\ServicoPesquisaDto.cs" />
     <Compile Include="DTOs\TipoPessoaDto.cs" />

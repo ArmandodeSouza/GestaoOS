@@ -1,18 +1,25 @@
 ﻿using GestaoOS.Application;
+using GestaoOS.Application.Enum;
+using GestaoOS.Application.Interface;
 using GestaoOS.Domain.Entities;
 using GestaoOS.Services.DTOs;
 using GestaoOS.Services.Interface;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace GestaoOS.Services.Services {
     public sealed class OrdemServicoService : IOrdemServicoService {
 
         private readonly IOrdemServicoRepository _ordemServicoRepository;
+        private readonly IClienteService _clienteService;
+        private readonly IServicoService _servicoService;
 
-        public OrdemServicoService(IOrdemServicoRepository ordemServicoRepository) {
+        public OrdemServicoService(IOrdemServicoRepository ordemServicoRepository, IClienteService clienteService, IServicoService servicoService) {
             _ordemServicoRepository = ordemServicoRepository;
+            _clienteService = clienteService;
+            _servicoService = servicoService;
         }
 
         public async Task<Result<int>> AdicionarAsync(OrdemServicoCadastroDto dto) {
@@ -36,12 +43,12 @@ namespace GestaoOS.Services.Services {
                         itemDto.ServicoId,
                         itemDto.Quantidade,
                         itemDto.ValorUnitario,
-                        itemDto.PercentualImpostoAplicado
+                        itemDto.ImpostoAplicado
                     );
 
                     ordemServico.AdicionarItem(item);
-                }
 
+                }
                 var ordemservicoId = await _ordemServicoRepository.AdicionarAsync(ordemServico);
 
                 return Result<int>.Ok(ordemservicoId);
@@ -50,12 +57,12 @@ namespace GestaoOS.Services.Services {
             }
         }
 
-        public async Task<Result> AtualizarAsync(OrdemServicoAtualizacaoDto dto) {
+        public async Task<Result> AtualizarAsync(OrdemServicoCadastroDto dto) {
             if (dto == null)
                 return Result.Fail("Ordem de Serviço inválida.");
 
             if (dto.OrdemServicoId <= 0)
-                return Result.Fail("Código da Ordem de Serviço inválido.");
+                return Result.Fail("Ordem de Serviço inválida.");
 
             if (dto.ClienteId <= 0)
                 return Result.Fail("Cliente inválido.");
@@ -69,14 +76,21 @@ namespace GestaoOS.Services.Services {
                 if (ordemServico == null)
                     return Result.Fail("Ordem de Serviço não encontrada.");
 
+                if (ordemServico.Versao != dto.Versao)
+                    return Result.Fail("Esta Ordem de Serviço foi alterada por outro usuário. Reabra a tela e tente novamente.");
+
                 ordemServico.AtualizarObservacao(dto.Observacao);
+
+                foreach (var itemAtual in ordemServico.Itens.ToList()) {
+                    ordemServico.RemoverItem(itemAtual);
+                }
 
                 foreach (var itemDto in dto.Itens) {
                     var item = new OrdemServicoItem(
                         itemDto.ServicoId,
                         itemDto.Quantidade,
                         itemDto.ValorUnitario,
-                        itemDto.PercentualImpostoAplicado
+                        itemDto.ImpostoAplicado
                     );
 
                     ordemServico.AdicionarItem(item);
@@ -86,23 +100,60 @@ namespace GestaoOS.Services.Services {
 
                 return Result.Ok();
             } catch (Exception ex) {
-                return Result.Fail(ex.Message);
+                return Result.Fail(ex.ToString());
             }
         }
 
-        public async Task<Result<OrdemServico>> ObterPorIdAsync(int ordemServicoId) {
+        public async Task<Result<OrdemServicoEdicaoDto>> ObterPorIdAsync(int ordemServicoId) {
             if (ordemServicoId <= 0)
-                return Result<OrdemServico>.Fail("Ordem de Serviço inválida.");
+                return Result<OrdemServicoEdicaoDto>.Fail("Ordem de Serviço inválida.");
 
             try {
                 var ordemServico = await _ordemServicoRepository.ObterPorIdAsync(ordemServicoId);
 
                 if (ordemServico == null)
-                    return Result<OrdemServico>.Fail("Ordem de Serviço não encontrada.");
+                    return Result<OrdemServicoEdicaoDto>.Fail("Ordem de Serviço não encontrada.");
 
-                return Result<OrdemServico>.Ok(ordemServico);
-            } catch (Exception) {
-                return Result<OrdemServico>.Fail("Erro ao buscar a Ordem de Serviço.");
+                var clientes = await _clienteService.ListarClienteAsync();
+
+                if (!clientes.Success)
+                    return Result<OrdemServicoEdicaoDto>.Fail(clientes.Error);
+
+                var servicos = await _servicoService.ListarServicoAsync();
+
+                if (!servicos.Success)
+                    return Result<OrdemServicoEdicaoDto>.Fail(servicos.Error);
+
+                var cliente = clientes.Value.FirstOrDefault(x => x.ClienteId == ordemServico.ClienteId);
+
+                var dto = new OrdemServicoEdicaoDto {
+                    OrdemServicoId = ordemServico.OrdemServicoId,
+                    ClienteId = ordemServico.ClienteId,
+                    Cliente = cliente == null ? string.Empty : cliente.Nome,
+                    DataAbertura = ordemServico.DataAbertura,
+                    DataFechamento = ordemServico.DataConclusao,
+                    Status = (StatusOrdemServico)(int)ordemServico.Status,
+                    Observacao = ordemServico.Observacao,
+                    ValorTotal = ordemServico.ValorTotal,
+                    Versao = ordemServico.Versao,
+                    Itens = ordemServico.Itens.Select(x => {
+                        var servico = servicos.Value.FirstOrDefault(s => s.ServicoId == x.ServicoId);
+
+                        return new OrdemServicoItemEdicaoDto {
+                            OrdemServicoItemId = x.OrdemServicoItemId,
+                            ServicoId = x.ServicoId,
+                            NomeServico = servico == null ? string.Empty : servico.Nome,
+                            Quantidade = x.Quantidade,
+                            ValorUnitario = x.ValorUnitario,
+                            ImpostoAplicado = x.PercentualImpostoAplicado,
+                            ValorTotalItem = x.ValorTotalItem
+                        };
+                    }).ToList()
+                };
+
+                return Result<OrdemServicoEdicaoDto>.Ok(dto);
+            } catch (Exception ex) {
+                return Result<OrdemServicoEdicaoDto>.Fail(ex.ToString());
             }
         }
 
@@ -122,7 +173,28 @@ namespace GestaoOS.Services.Services {
                 return Result<IList<OrdemServico>>.Fail("Erro ao listar Ordens de Serviço.");
             }
         }
+        public async Task<Result> CancelarAsync(int ordemServicoId, string usuario) {
+            if (ordemServicoId <= 0)
+                return Result.Fail("Código da Ordem de Serviço inválido.");
 
+            if (string.IsNullOrWhiteSpace(usuario))
+                return Result.Fail("Usuário é obrigatório para cancelar a OS.");
+
+            try {
+                var ordemServico = await _ordemServicoRepository.ObterPorIdAsync(ordemServicoId);
+
+                if (ordemServico == null)
+                    return Result.Fail("Ordem de Serviço não encontrada.");
+
+                ordemServico.Cancelar(usuario);
+
+                await _ordemServicoRepository.AtualizarAsync(ordemServico);
+
+                return Result.Ok();
+            } catch (Exception ex) {
+                return Result.Fail(ex.Message);
+            }
+        }
         public async Task<Result> ConcluirAsync(int ordemServicoId, string usuario) {
             if (ordemServicoId <= 0)
                 return Result.Fail("Código da Ordem de Serviço inválido.");

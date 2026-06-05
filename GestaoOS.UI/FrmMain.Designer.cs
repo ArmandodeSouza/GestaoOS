@@ -44,7 +44,6 @@
             this.tblBot = new System.Windows.Forms.TableLayoutPanel();
             this.btnNovaOs = new System.Windows.Forms.Button();
             this.btnEditarOs = new System.Windows.Forms.Button();
-            this.btnExcluirOs = new System.Windows.Forms.Button();
             this.tblMid = new System.Windows.Forms.TableLayoutPanel();
             this.dgvOs = new System.Windows.Forms.DataGridView();
             this.menuStrip1.SuspendLayout();
@@ -238,7 +237,6 @@
             this.tblBot.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.tblBot.Controls.Add(this.btnNovaOs, 1, 1);
             this.tblBot.Controls.Add(this.btnEditarOs, 1, 0);
-            this.tblBot.Controls.Add(this.btnExcluirOs, 0, 1);
             this.tblBot.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.tblBot.Location = new System.Drawing.Point(0, 350);
             this.tblBot.Name = "tblBot";
@@ -268,16 +266,7 @@
             this.btnEditarOs.TabIndex = 1;
             this.btnEditarOs.Text = "Editar OS";
             this.btnEditarOs.UseVisualStyleBackColor = true;
-            // 
-            // btnExcluirOs
-            // 
-            this.btnExcluirOs.Anchor = System.Windows.Forms.AnchorStyles.Left;
-            this.btnExcluirOs.Location = new System.Drawing.Point(3, 63);
-            this.btnExcluirOs.Name = "btnExcluirOs";
-            this.btnExcluirOs.Size = new System.Drawing.Size(75, 23);
-            this.btnExcluirOs.TabIndex = 2;
-            this.btnExcluirOs.Text = "Excluir OS";
-            this.btnExcluirOs.UseVisualStyleBackColor = true;
+            this.btnEditarOs.Click += new System.EventHandler(this.btnEditarOs_Click);
             // 
             // tblMid
             // 
@@ -351,7 +340,6 @@
         private System.Windows.Forms.Button btnPesquisar;
         private System.Windows.Forms.Button btnNovaOs;
         private System.Windows.Forms.Button btnEditarOs;
-        private System.Windows.Forms.Button btnExcluirOs;
         private System.Windows.Forms.ComboBox cmbStatusOs;
         private System.Windows.Forms.Panel pnlDatas;
         private System.Windows.Forms.Label lblDataInicial;

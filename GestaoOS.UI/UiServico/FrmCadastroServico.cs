@@ -70,9 +70,9 @@ namespace GestaoOS.UI.UiServico {
         }
 
 
-        private void FrmCadastroServico_Load(object sender, EventArgs e) {
+        private async void FrmCadastroServico_Load(object sender, EventArgs e) {
             if (_servicoId.HasValue)
-                CarregarServicoAsync(_servicoId.Value);
+                await CarregarServicoAsync(_servicoId.Value);
 
             chkAtivo.Checked = true;
         }

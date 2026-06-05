@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 
 namespace GestaoOS.Services.Interface {
-    public sealed class OrdemServicoCadastroDto {
+    public class OrdemServicoCadastroDto {
+        public int OrdemServicoId { get; set; }
         public int ClienteId { get; set; }
         public string Observacao { get; set; }
-        public IList<OrdemServicoItemCadastroDto> Itens { get; set; }
-
-        public OrdemServicoCadastroDto() {
-            Itens = new List<OrdemServicoItemCadastroDto>();
-        }
+        public int Versao { get; set; }
+        public List<OrdemServicoItemCadastroDto> Itens { get; set; }
     }
 }

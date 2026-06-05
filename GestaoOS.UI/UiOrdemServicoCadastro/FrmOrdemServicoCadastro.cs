@@ -31,7 +31,8 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
         private ServicoPesquisaDto _servicoSelecionado;
 
         private int _ordemServicoId = 0;
-
+        private int _versao = 0;
+        private bool _modoEdicao = false;
         public FrmOrdemServicoCadastro(IOrdemServicoService ordemServicoService, IClienteService clienteService, IServicoService servicoService) {
             InitializeComponent();
 
@@ -43,15 +44,76 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
         private async void FrmOrdemServicoCadastro_Load(object sender, EventArgs e) {
             cmbStatusOs.DataSource = Enum.GetValues(typeof(StatusOrdemServico));
             cmbStatusOs.SelectedItem = StatusOrdemServico.Aberta;
+            cmbStatusOs.Enabled = false;
 
-            mskDataInclusao.Text = DateTime.UtcNow.ToString("dd/MM/yyyy");
+            mskDataInclusao.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
-            ListaClientes();
-
-            ListaServicos();
+            await ListaClientes();
+            await ListaServicos();
 
             ConfigurarGrid();
 
+            if (_modoEdicao)
+                await CarregarOrdemServicoAsync();
+
+        }
+
+        private async Task CarregarOrdemServicoAsync() {
+            var resultado = await _ordemServicoService.ObterPorIdAsync(_ordemServicoId);
+
+            if (!resultado.Success) {
+                MessageBox.Show(resultado.Error);
+                Close();
+                return;
+            }
+
+            var ordemServico = resultado.Value;
+
+            _ordemServicoId = ordemServico.OrdemServicoId;
+            _versao = ordemServico.Versao;
+
+            _clienteSelecionado = new ClientePesquisaDto {
+                ClienteId = ordemServico.ClienteId,
+                Nome = ordemServico.Cliente
+            };
+
+            txtCliente.Text = ordemServico.Cliente;
+            txtCliente.Enabled = false;
+
+            txtObservacoes.Text = ordemServico.Observacao;
+            lblNumOs.Text = ordemServico.OrdemServicoId.ToString();
+            lblValorTotalNum.Text = ordemServico.ValorTotal.ToString("N2");
+
+            mskDataInclusao.Text = ordemServico.DataAbertura.ToString("dd/MM/yyyy");
+
+            if (ordemServico.DataFechamento.HasValue)
+                mskDataConclusao.Text = ordemServico.DataFechamento.Value.ToString("dd/MM/yyyy");
+
+            cmbStatusOs.SelectedItem = ordemServico.Status;
+
+            _itensGrid.Clear();
+
+            foreach (var item in ordemServico.Itens) {
+                _itensGrid.Add(new OrdemServicoItemGridDto {
+                    OrdemServicoItemId = item.OrdemServicoItemId,
+                    ServicoId = item.ServicoId,
+                    NomeServico = item.NomeServico,
+                    Quantidade = item.Quantidade,
+                    ValorUnitario = item.ValorUnitario,
+                    ImpostoAplicado = item.ImpostoAplicado,
+                    ValorTotalItem = item.ValorTotalItem
+                });
+            }
+
+            CarregarGridItens();
+            AtualizarTotalOs();
+
+            btnSalvarOs.Text = "Atualizar OS";
+        }
+
+        public void CarregarParaEdicao(int ordemServicoId) {
+            _ordemServicoId = ordemServicoId;
+            _modoEdicao = true;
         }
 
         private async Task ListaServicos() {
@@ -267,7 +329,7 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
                 NomeServico = _servicoSelecionado.Nome,
                 Quantidade = numQuantidade.Value,
                 ValorUnitario = _servicoSelecionado.ValorBase,
-                PercentualImpostoAplicado = _servicoSelecionado.PercentualImposto,
+                ImpostoAplicado = _servicoSelecionado.PercentualImposto,
                 ValorTotalItem = (numQuantidade.Value * _servicoSelecionado.ValorBase) + _servicoSelecionado.PercentualImposto
             };
 
@@ -299,33 +361,53 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
         }
 
         private async Task SalvarAsync() {
+            if (_clienteSelecionado == null) {
+                MessageBox.Show("Selecione um cliente.");
+                return;
+            }
+
             if (_itensGrid.Count == 0) {
                 MessageBox.Show("Adicione ao menos um item.");
                 return;
             }
 
             var dto = new OrdemServicoCadastroDto {
+                OrdemServicoId = _ordemServicoId,
                 ClienteId = _clienteSelecionado.ClienteId,
                 Observacao = txtObservacoes.Text,
+                Versao = _versao,
                 Itens = _itensGrid.Select(x => new OrdemServicoItemCadastroDto {
                     ServicoId = x.ServicoId,
-                    Quantidade = x.Quantidade
+                    Quantidade = x.Quantidade,
+                    ValorUnitario = x.ValorUnitario,
+                    ImpostoAplicado = x.ImpostoAplicado
                 }).ToList()
             };
 
-            var resultado = await _ordemServicoService.AdicionarAsync(dto);
-            _ordemServicoId = resultado.Value;
-            if (!resultado.Success) {
-                MessageBox.Show(resultado.Error);
+            if (_modoEdicao) {
+                var resultado = await _ordemServicoService.AtualizarAsync(dto);
+
+                if (!resultado.Success) {
+                    MessageBox.Show(resultado.Error);
+                    return;
+                }
+
+                MessageBox.Show("Ordem de Serviço atualizada com sucesso.");
+                Close();
                 return;
             }
 
+            var resultadoCadastro = await _ordemServicoService.AdicionarAsync(dto);
+
+            if (!resultadoCadastro.Success) {
+                MessageBox.Show(resultadoCadastro.Error);
+                return;
+            }
+
+            _ordemServicoId = resultadoCadastro.Value;
+            _modoEdicao = true;
+
             MessageBox.Show("Ordem de Serviço cadastrada com sucesso.");
-
-            DialogResult = DialogResult.OK;
-            Close();
-
-
         }
 
         private async void btnFinalizarOs_Click(object sender, EventArgs e) {
@@ -376,6 +458,35 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
 
             dgvItensOS.Enabled = false;
             cmbStatusOs.Enabled = false;
+        }
+
+        private async void btnCancelarOs_Click(object sender, EventArgs e) {
+            if (_ordemServicoId <= 0) {
+                MessageBox.Show("Salve a OS antes de cancelar.");
+                return;
+            }
+
+            var confirmacao = MessageBox.Show(
+                "Deseja realmente cancelar esta Ordem de Serviço?",
+                "Cancelar OS",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+            var resultado = await _ordemServicoService.CancelarAsync(_ordemServicoId, Environment.UserName);
+
+            if (!resultado.Success) {
+                MessageBox.Show(resultado.Error);
+                return;
+            }
+
+            cmbStatusOs.SelectedItem = StatusOrdemServico.Cancelada;
+
+            DesabilitarCamposOs();
+
+            MessageBox.Show("Ordem de Serviço cancelada com sucesso.");
         }
     }
 }

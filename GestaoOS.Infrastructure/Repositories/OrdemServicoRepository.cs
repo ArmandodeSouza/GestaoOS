@@ -431,25 +431,26 @@ namespace GestaoOS.Infra.Repositories {
             var offset = (filtro.Pagina - 1) * filtro.TamanhoPagina;
 
             var sql = @"
-        SELECT
-            os.ordem_servico_id,
-            c.nome AS cliente,
-            os.data_abertura,
-            os.status,
-            os.valor_total
-        FROM gestao.ordem_servico os
-        INNER JOIN gestao.cliente c
-            ON c.cliente_id = os.cliente_id
-        WHERE os.data_abertura >= @data_inicial
-          AND os.data_abertura < @data_final
-    ";
+SELECT
+    os.ordem_servico_id,
+    c.nome AS cliente,
+    os.data_abertura,
+    os.data_conclusao,
+    os.status,
+    os.valor_total
+FROM gestao.ordem_servico os
+INNER JOIN gestao.cliente c
+    ON c.cliente_id = os.cliente_id
+WHERE os.data_abertura >= @data_inicial
+  AND os.data_abertura < @data_final
+";
 
             if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.OS) {
                 sql += " AND os.ordem_servico_id = @ordem_servico_id ";
             }
 
             if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Cliente) {
-                sql += " AND os.cliente_id = @cliente_id ";
+                sql += " AND c.nome ILIKE @nome ";
             }
 
             if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Status) {
@@ -457,10 +458,10 @@ namespace GestaoOS.Infra.Repositories {
             }
 
             sql += @"
-        ORDER BY os.ordem_servico_id DESC
-        LIMIT @limit
-        OFFSET @offset;
-    ";
+ORDER BY os.ordem_servico_id DESC
+LIMIT @limit
+OFFSET @offset;
+";
 
             using (var connection = _connectionFactory.CriarConexao()) {
                 await connection.OpenAsync();
@@ -472,24 +473,15 @@ namespace GestaoOS.Infra.Repositories {
                     command.Parameters.AddWithValue("@offset", offset);
 
                     if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.OS) {
-                        command.Parameters.AddWithValue(
-                            "@ordem_servico_id",
-                            filtro.OrdemServicoId.Value
-                        );
+                        command.Parameters.AddWithValue("@ordem_servico_id", filtro.OrdemServicoId.Value);
                     }
 
                     if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Cliente) {
-                        command.Parameters.AddWithValue(
-                            "@cliente_id",
-                            filtro.ClienteId.Value
-                        );
+                        command.Parameters.AddWithValue("@nome", "%" + filtro.Cliente.Trim() + "%");
                     }
 
                     if (filtro.TipoPesquisa == TipoPesquisaOrdemServico.Status) {
-                        command.Parameters.AddWithValue(
-                            "@status",
-                            filtro.Status.Value
-                        );
+                        command.Parameters.AddWithValue("@status", (int)filtro.Status.Value);
                     }
 
                     using (var reader = await command.ExecuteReaderAsync()) {
@@ -498,6 +490,7 @@ namespace GestaoOS.Infra.Repositories {
                                 OrdemServicoId = Convert.ToInt32(reader["ordem_servico_id"]),
                                 Cliente = reader["cliente"].ToString(),
                                 DataAbertura = Convert.ToDateTime(reader["data_abertura"]),
+                                DataFechamento = reader["data_conclusao"] == DBNull.Value ? (DateTime?)null : Convert.ToDateTime(reader["data_conclusao"]),
                                 Status = ((StatusOrdemServico)Convert.ToInt32(reader["status"])).ToString(),
                                 ValorTotal = Convert.ToDecimal(reader["valor_total"])
                             });

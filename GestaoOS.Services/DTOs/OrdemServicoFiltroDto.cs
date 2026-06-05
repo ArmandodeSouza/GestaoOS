@@ -9,7 +9,7 @@ namespace GestaoOS.Services.DTOs {
 
         public int? OrdemServicoId { get; set; }
 
-        public int? ClienteId { get; set; }
+        public string Cliente { get; set; }
 
         public StatusOrdemServico? Status { get; set; }
 
