@@ -1,7 +1,6 @@
 <Solution>
   <Project Path="GestaoOS.Entities/GestaoOS.Domain.csproj" Id="1f927563-5bbf-4909-adc0-e6a0220c6d24" />
   <Project Path="GestaoOS.Infrastructure/GestaoOS.Infrastructure.csproj" Id="45875d2f-6c88-47aa-b559-384a6c847b6d" />
-  <Project Path="GestaoOS.Reports/GestaoOS.Reports.csproj" Id="44829216-1f3d-4417-8c70-ff5c9738215d" />
   <Project Path="GestaoOS.Services/GestaoOS.Application.csproj" Id="bd7563e0-30f0-430f-8f42-036c6729d80a" />
   <Project Path="GestaoOS.UI/GestaoOS.UI.csproj" Id="20a15a55-5ba9-4802-bf11-49c4075ce09a" />
 </Solution>

@@ -189,10 +189,6 @@
       <Project>{45875d2f-6c88-47aa-b559-384a6c847b6d}</Project>
       <Name>GestaoOS.Infrastructure</Name>
     </ProjectReference>
-    <ProjectReference Include="..\GestaoOS.Reports\GestaoOS.Reports.csproj">
-      <Project>{44829216-1f3d-4417-8c70-ff5c9738215d}</Project>
-      <Name>GestaoOS.Reports</Name>
-    </ProjectReference>
     <ProjectReference Include="..\GestaoOS.Services\GestaoOS.Application.csproj">
       <Project>{bd7563e0-30f0-430f-8f42-036c6729d80a}</Project>
       <Name>GestaoOS.Application</Name>
