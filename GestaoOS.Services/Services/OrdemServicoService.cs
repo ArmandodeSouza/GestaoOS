@@ -241,5 +241,17 @@ namespace GestaoOS.Services.Services {
                     .Fail(ex.Message);
             }
         }
+
+        public async Task ReabrirAsync(int ordemServicoId) {
+            var ordemServico = await _ordemServicoRepository.ObterPorIdAsync(ordemServicoId);
+
+            if (ordemServico == null)
+                throw new Exception("Ordem de serviço não encontrada.");
+
+            ordemServico.Reabrir();
+
+            await _ordemServicoRepository.AtualizarAsync(ordemServico);
+        }
+
     }
 }

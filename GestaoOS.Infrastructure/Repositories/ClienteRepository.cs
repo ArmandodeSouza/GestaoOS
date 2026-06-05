@@ -245,6 +245,24 @@ namespace GestaoOS.Infrastructure.Repositories {
                 reader.GetBoolean(reader.GetOrdinal("ativo")));
         }
 
+        public async Task<bool> PossuiOrdemServicoAsync(int clienteId) {
+            using (var connection = _connectionFactory.CriarConexao())
+            using (var command = connection.CreateCommand()) {
+                command.CommandText = @"
+            SELECT EXISTS (
+                SELECT 1
+                FROM gestao.ordem_servico
+                WHERE cliente_id = @clienteId
+            );";
 
+                command.Parameters.AddWithValue("@clienteId", clienteId);
+
+                connection.Open();
+
+                var resultado = await command.ExecuteScalarAsync();
+
+                return Convert.ToBoolean(resultado);
+            }
+        }
     }
 }

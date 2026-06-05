@@ -448,6 +448,7 @@
             this.btnReabrirOs.TabIndex = 8;
             this.btnReabrirOs.Text = "Reabrir OS";
             this.btnReabrirOs.UseVisualStyleBackColor = true;
+            this.btnReabrirOs.Click += new System.EventHandler(this.btnReabrirOs_Click);
             // 
             // btnFinalizarOs
             // 

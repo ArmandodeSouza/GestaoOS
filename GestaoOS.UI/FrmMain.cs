@@ -6,6 +6,7 @@ using GestaoOS.Services.Services;
 using GestaoOS.UI.Enums;
 using GestaoOS.UI.UiCliente;
 using GestaoOS.UI.UiOrdemServicoCadastro;
+using GestaoOS.UI.UiRelatorio;
 using GestaoOS.UI.UiServico;
 using Microsoft.Extensions.DependencyInjection;
 using System;
@@ -72,6 +73,9 @@ namespace GestaoOS.UI {
 
         private void incluirToolStripMenuItem1_Click(object sender, EventArgs e) {
             AbrirFormulario<FrmCadastroServico>();
+        }
+        private void relatóriosToolStripMenuItem_Click(object sender, EventArgs e) {
+            AbrirFormulario<FrmRelatorio>();
         }
 
         private void cmbTipoPesquisaOs_SelectedIndexChanged(object sender, EventArgs e) {
@@ -246,6 +250,7 @@ namespace GestaoOS.UI {
 
             _ = PesquisarAsync();
         }
+
 
     }
 }

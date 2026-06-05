@@ -91,7 +91,7 @@ namespace GestaoOS.Domain.Entities {
             if (Status != StatusOrdemServicoDom.Aberta)
                 throw new InvalidOperationException("Somente OS aberta pode ser iniciada.");
 
-            AlterarStatus(StatusOrdemServicoDom.EmAndamento, usuario);
+            AlterarStatus(StatusOrdemServicoDom.EmAndamento);
         }
 
         public void Concluir(string usuario) {
@@ -106,7 +106,7 @@ namespace GestaoOS.Domain.Entities {
             if (ValorTotal <= 0)
                 throw new InvalidOperationException("Não é possível concluir uma OS com valor total zerado.");
 
-            AlterarStatus(StatusOrdemServicoDom.Concluida, usuario);
+            AlterarStatus(StatusOrdemServicoDom.Concluida);
             DataConclusao = DateTime.Now;
         }
 
@@ -114,7 +114,7 @@ namespace GestaoOS.Domain.Entities {
             if (Status == StatusOrdemServicoDom.Concluida)
                 throw new InvalidOperationException("OS concluída não pode ser cancelada.");
 
-            AlterarStatus(StatusOrdemServicoDom.Cancelada, usuario);
+            AlterarStatus(StatusOrdemServicoDom.Cancelada);
         }
 
         private void RecalcularTotal() {
@@ -149,9 +149,7 @@ namespace GestaoOS.Domain.Entities {
             RecalcularTotal();
         }
 
-        private void AlterarStatus(StatusOrdemServicoDom novoStatus, string usuario) {
-            if (string.IsNullOrWhiteSpace(usuario))
-                throw new ArgumentException("Usuário é obrigatório.");
+        private void AlterarStatus(StatusOrdemServicoDom novoStatus) {
 
             var statusAnterior = Status;
 
@@ -160,7 +158,20 @@ namespace GestaoOS.Domain.Entities {
 
             Status = novoStatus;
 
-            _historicos.Add(new OrdemServicoHistoricoStatus(statusAnterior, novoStatus, usuario));
+            _historicos.Add(new OrdemServicoHistoricoStatus(statusAnterior, novoStatus));
+        }
+
+        public void Reabrir() {
+            if (Status != StatusOrdemServicoDom.Cancelada &&
+                Status != StatusOrdemServicoDom.Concluida)
+                throw new InvalidOperationException("A OS só pode ser reaberta se estiver cancelada ou concluída.");
+
+            var statusAnterior = Status;
+
+            Status = StatusOrdemServicoDom.Aberta;
+            DataConclusao = null;
+
+            _historicos.Add(new OrdemServicoHistoricoStatus(statusAnterior, StatusOrdemServicoDom.Aberta));
         }
     }
 }

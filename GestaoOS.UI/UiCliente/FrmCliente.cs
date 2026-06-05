@@ -162,5 +162,34 @@ namespace GestaoOS.UI.UiCliente {
                 }
             }
         }
+
+        private async void btnExcluir_Click(object sender, EventArgs e) {
+            var cliente = dgvClientes.CurrentRow.DataBoundItem as ClientePesquisaDto;
+
+            if (cliente == null) {
+                MessageBox.Show("Selecione um cliente para excluir.");
+                return;
+            }
+
+            var confirmacao = MessageBox.Show(
+                "Deseja realmente excluir este cliente?",
+                "Excluir cliente",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (confirmacao != DialogResult.Yes)
+                return;
+
+            var resultado = await _clienteService.ExcluirAsync(cliente.ClienteId);
+
+            if (!resultado.Success) {
+                MessageBox.Show(resultado.Error);
+                return;
+            }
+
+            MessageBox.Show("Cliente excluído com sucesso.");
+
+            await PesquisarAsync();
+        }
     }
 }

@@ -81,8 +81,18 @@ namespace GestaoOS.Application.Services {
             return Result.Ok();
         }
 
-        public Task<Result> ExcluirAsync(int clienteId) {
-            throw new NotImplementedException();
+        public async Task<Result> ExcluirAsync(int clienteId) {
+            if (clienteId <= 0)
+                return Result.Fail("Cliente inválido.");
+
+            var possuiOs = await _clienteRepository.PossuiOrdemServicoAsync(clienteId);
+
+            if (possuiOs)
+                return Result.Fail("Não é possível excluir o cliente, pois ele possui ordem de serviço vinculada.");
+
+            await _clienteRepository.ExcluirAsync(clienteId);
+
+            return Result.Ok();
         }
 
         public async Task<Result<List<ClientePesquisaDto>>> ListarClienteAsync() {

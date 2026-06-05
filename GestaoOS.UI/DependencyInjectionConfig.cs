@@ -8,6 +8,7 @@ using GestaoOS.Services.Services;
 using GestaoOS.UI.UiCliente;
 using GestaoOS.UI.UiOrdemServicoCadastro;
 using GestaoOS.UI.UiServico;
+using GestaoOS.UI.UiRelatorio;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace GestaoOS.UI {
@@ -22,12 +23,14 @@ namespace GestaoOS.UI {
             services.AddScoped<IClienteRepository, ClienteRepository>();
             services.AddScoped<IServicoRepository, ServicoRepository>();
             services.AddScoped<IOrdemServicoRepository, OrdemServicoRepository>();
+            services.AddScoped<IRelatorioOsRepository, RelatorioOsRepository>();
 
 
             // Application Services
             services.AddScoped<IClienteService, ClienteService>();
             services.AddScoped<IServicoService, ServicoService>();
             services.AddScoped<IOrdemServicoService, OrdemServicoService>();
+            services.AddScoped<IRelatorioOsService, RelatorioOsService>();
 
             // UI Forms
             services.AddTransient<FrmMain>();
@@ -36,6 +39,7 @@ namespace GestaoOS.UI {
             services.AddTransient<FrmServico>();
             services.AddTransient<FrmCadastroServico>();
             services.AddTransient<FrmOrdemServicoCadastro>();
+            services.AddTransient<FrmRelatorio>();
 
 
             return services.BuildServiceProvider();

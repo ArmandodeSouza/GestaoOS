@@ -16,5 +16,7 @@ namespace GestaoOS.Application.Interface {
         Task<IReadOnlyCollection<Cliente>> PesquisarAsync(string nome, string documento, bool? ativo);
 
         Task<List<ClientePesquisaDto>> ListarClienteAsync();
+
+        Task<bool> PossuiOrdemServicoAsync(int clienteId);
     }
 }

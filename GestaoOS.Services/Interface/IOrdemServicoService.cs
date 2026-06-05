@@ -1,6 +1,7 @@
 ﻿using GestaoOS.Application;
 using GestaoOS.Domain.Entities;
 using GestaoOS.Services.DTOs;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -17,5 +18,7 @@ namespace GestaoOS.Services.Interface {
         Task<Result> CancelarAsync(int ordemServicoId, string usuario);
 
         Task<Result<IList<OrdemServicoPesquisaDto>>> PesquisarAsync(OrdemServicoFiltroDto filtro);
+
+        Task ReabrirAsync(int ordemServicoId);
     }
 }

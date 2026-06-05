@@ -24,32 +24,32 @@
         /// </summary>
         private void InitializeComponent() {
             this.TblTop = new System.Windows.Forms.TableLayoutPanel();
+            this.pnlNome = new System.Windows.Forms.Panel();
+            this.lblNome = new System.Windows.Forms.Label();
+            this.txtNomePesquisa = new System.Windows.Forms.TextBox();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.lblDocumento = new System.Windows.Forms.Label();
+            this.mskDocumentoPesquisa = new System.Windows.Forms.MaskedTextBox();
+            this.cmbTipoPessoa = new System.Windows.Forms.ComboBox();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.btnPesquisar = new System.Windows.Forms.Button();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.lblStatus = new System.Windows.Forms.Label();
+            this.cmbStatusCliente = new System.Windows.Forms.ComboBox();
             this.TblMid = new System.Windows.Forms.TableLayoutPanel();
             this.dgvClientes = new System.Windows.Forms.DataGridView();
             this.TblBot = new System.Windows.Forms.TableLayoutPanel();
             this.btnNovo = new System.Windows.Forms.Button();
-            this.pnlNome = new System.Windows.Forms.Panel();
-            this.txtNomePesquisa = new System.Windows.Forms.TextBox();
-            this.lblNome = new System.Windows.Forms.Label();
-            this.cmbTipoPessoa = new System.Windows.Forms.ComboBox();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.mskDocumentoPesquisa = new System.Windows.Forms.MaskedTextBox();
-            this.lblDocumento = new System.Windows.Forms.Label();
-            this.panel2 = new System.Windows.Forms.Panel();
-            this.btnPesquisar = new System.Windows.Forms.Button();
-            this.panel3 = new System.Windows.Forms.Panel();
-            this.cmbStatusCliente = new System.Windows.Forms.ComboBox();
-            this.lblStatus = new System.Windows.Forms.Label();
             this.btnEditar = new System.Windows.Forms.Button();
             this.btnExcluir = new System.Windows.Forms.Button();
             this.TblTop.SuspendLayout();
-            this.TblMid.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
-            this.TblBot.SuspendLayout();
             this.pnlNome.SuspendLayout();
             this.panel1.SuspendLayout();
             this.panel2.SuspendLayout();
             this.panel3.SuspendLayout();
+            this.TblMid.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).BeginInit();
+            this.TblBot.SuspendLayout();
             this.SuspendLayout();
             // 
             // TblTop
@@ -69,6 +69,140 @@
             this.TblTop.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 50F));
             this.TblTop.Size = new System.Drawing.Size(800, 100);
             this.TblTop.TabIndex = 0;
+            // 
+            // pnlNome
+            // 
+            this.pnlNome.Controls.Add(this.lblNome);
+            this.pnlNome.Controls.Add(this.txtNomePesquisa);
+            this.pnlNome.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlNome.Location = new System.Drawing.Point(3, 3);
+            this.pnlNome.Name = "pnlNome";
+            this.pnlNome.Size = new System.Drawing.Size(394, 44);
+            this.pnlNome.TabIndex = 0;
+            // 
+            // lblNome
+            // 
+            this.lblNome.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblNome.AutoSize = true;
+            this.lblNome.Location = new System.Drawing.Point(9, 12);
+            this.lblNome.Name = "lblNome";
+            this.lblNome.Size = new System.Drawing.Size(35, 13);
+            this.lblNome.TabIndex = 1;
+            this.lblNome.Text = "Nome";
+            // 
+            // txtNomePesquisa
+            // 
+            this.txtNomePesquisa.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtNomePesquisa.Location = new System.Drawing.Point(50, 9);
+            this.txtNomePesquisa.Name = "txtNomePesquisa";
+            this.txtNomePesquisa.Size = new System.Drawing.Size(341, 20);
+            this.txtNomePesquisa.TabIndex = 0;
+            // 
+            // panel1
+            // 
+            this.panel1.Controls.Add(this.lblDocumento);
+            this.panel1.Controls.Add(this.mskDocumentoPesquisa);
+            this.panel1.Controls.Add(this.cmbTipoPessoa);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 53);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(394, 44);
+            this.panel1.TabIndex = 2;
+            // 
+            // lblDocumento
+            // 
+            this.lblDocumento.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblDocumento.AutoSize = true;
+            this.lblDocumento.Location = new System.Drawing.Point(9, 11);
+            this.lblDocumento.Name = "lblDocumento";
+            this.lblDocumento.Size = new System.Drawing.Size(62, 13);
+            this.lblDocumento.TabIndex = 3;
+            this.lblDocumento.Text = "Documento";
+            // 
+            // mskDocumentoPesquisa
+            // 
+            this.mskDocumentoPesquisa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.mskDocumentoPesquisa.Location = new System.Drawing.Point(226, 8);
+            this.mskDocumentoPesquisa.Name = "mskDocumentoPesquisa";
+            this.mskDocumentoPesquisa.Size = new System.Drawing.Size(165, 20);
+            this.mskDocumentoPesquisa.TabIndex = 2;
+            // 
+            // cmbTipoPessoa
+            // 
+            this.cmbTipoPessoa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left)));
+            this.cmbTipoPessoa.FormattingEnabled = true;
+            this.cmbTipoPessoa.Items.AddRange(new object[] {
+            "Pessoa Física",
+            "Pessoa Jurídica"});
+            this.cmbTipoPessoa.Location = new System.Drawing.Point(86, 8);
+            this.cmbTipoPessoa.Name = "cmbTipoPessoa";
+            this.cmbTipoPessoa.Size = new System.Drawing.Size(121, 21);
+            this.cmbTipoPessoa.TabIndex = 1;
+            this.cmbTipoPessoa.SelectedIndexChanged += new System.EventHandler(this.cmbTipoPessoa_SelectedIndexChanged);
+            // 
+            // panel2
+            // 
+            this.panel2.Controls.Add(this.btnPesquisar);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(403, 53);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(394, 44);
+            this.panel2.TabIndex = 4;
+            // 
+            // btnPesquisar
+            // 
+            this.btnPesquisar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnPesquisar.Location = new System.Drawing.Point(310, 8);
+            this.btnPesquisar.Name = "btnPesquisar";
+            this.btnPesquisar.Size = new System.Drawing.Size(75, 23);
+            this.btnPesquisar.TabIndex = 4;
+            this.btnPesquisar.Text = "Pesquisar";
+            this.btnPesquisar.UseVisualStyleBackColor = true;
+            this.btnPesquisar.Click += new System.EventHandler(this.btnPesquisar_Click);
+            // 
+            // panel3
+            // 
+            this.panel3.Controls.Add(this.lblStatus);
+            this.panel3.Controls.Add(this.cmbStatusCliente);
+            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel3.Location = new System.Drawing.Point(403, 3);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(394, 44);
+            this.panel3.TabIndex = 5;
+            // 
+            // lblStatus
+            // 
+            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblStatus.AutoSize = true;
+            this.lblStatus.Location = new System.Drawing.Point(227, 12);
+            this.lblStatus.Name = "lblStatus";
+            this.lblStatus.Size = new System.Drawing.Size(37, 13);
+            this.lblStatus.TabIndex = 1;
+            this.lblStatus.Text = "Status";
+            // 
+            // cmbStatusCliente
+            // 
+            this.cmbStatusCliente.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.cmbStatusCliente.FormattingEnabled = true;
+            this.cmbStatusCliente.Items.AddRange(new object[] {
+            "Todos",
+            "Ativo",
+            "Inativo"});
+            this.cmbStatusCliente.Location = new System.Drawing.Point(270, 8);
+            this.cmbStatusCliente.Name = "cmbStatusCliente";
+            this.cmbStatusCliente.Size = new System.Drawing.Size(121, 21);
+            this.cmbStatusCliente.TabIndex = 0;
             // 
             // TblMid
             // 
@@ -120,140 +254,6 @@
             this.btnNovo.UseVisualStyleBackColor = true;
             this.btnNovo.Click += new System.EventHandler(this.btnNovo_Click);
             // 
-            // pnlNome
-            // 
-            this.pnlNome.Controls.Add(this.lblNome);
-            this.pnlNome.Controls.Add(this.txtNomePesquisa);
-            this.pnlNome.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlNome.Location = new System.Drawing.Point(3, 3);
-            this.pnlNome.Name = "pnlNome";
-            this.pnlNome.Size = new System.Drawing.Size(394, 44);
-            this.pnlNome.TabIndex = 0;
-            // 
-            // txtNomePesquisa
-            // 
-            this.txtNomePesquisa.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.txtNomePesquisa.Location = new System.Drawing.Point(50, 9);
-            this.txtNomePesquisa.Name = "txtNomePesquisa";
-            this.txtNomePesquisa.Size = new System.Drawing.Size(341, 20);
-            this.txtNomePesquisa.TabIndex = 0;
-            // 
-            // lblNome
-            // 
-            this.lblNome.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblNome.AutoSize = true;
-            this.lblNome.Location = new System.Drawing.Point(9, 12);
-            this.lblNome.Name = "lblNome";
-            this.lblNome.Size = new System.Drawing.Size(35, 13);
-            this.lblNome.TabIndex = 1;
-            this.lblNome.Text = "Nome";
-            // 
-            // cmbTipoPessoa
-            // 
-            this.cmbTipoPessoa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.cmbTipoPessoa.FormattingEnabled = true;
-            this.cmbTipoPessoa.Items.AddRange(new object[] {
-            "Pessoa Física",
-            "Pessoa Jurídica"});
-            this.cmbTipoPessoa.Location = new System.Drawing.Point(86, 8);
-            this.cmbTipoPessoa.Name = "cmbTipoPessoa";
-            this.cmbTipoPessoa.Size = new System.Drawing.Size(121, 21);
-            this.cmbTipoPessoa.TabIndex = 1;
-            this.cmbTipoPessoa.SelectedIndexChanged += new System.EventHandler(this.cmbTipoPessoa_SelectedIndexChanged);
-            // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.lblDocumento);
-            this.panel1.Controls.Add(this.mskDocumentoPesquisa);
-            this.panel1.Controls.Add(this.cmbTipoPessoa);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.Location = new System.Drawing.Point(3, 53);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(394, 44);
-            this.panel1.TabIndex = 2;
-            // 
-            // mskDocumentoPesquisa
-            // 
-            this.mskDocumentoPesquisa.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left)));
-            this.mskDocumentoPesquisa.Location = new System.Drawing.Point(226, 8);
-            this.mskDocumentoPesquisa.Name = "mskDocumentoPesquisa";
-            this.mskDocumentoPesquisa.Size = new System.Drawing.Size(165, 20);
-            this.mskDocumentoPesquisa.TabIndex = 2;
-            // 
-            // lblDocumento
-            // 
-            this.lblDocumento.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblDocumento.AutoSize = true;
-            this.lblDocumento.Location = new System.Drawing.Point(9, 11);
-            this.lblDocumento.Name = "lblDocumento";
-            this.lblDocumento.Size = new System.Drawing.Size(62, 13);
-            this.lblDocumento.TabIndex = 3;
-            this.lblDocumento.Text = "Documento";
-            // 
-            // panel2
-            // 
-            this.panel2.Controls.Add(this.btnPesquisar);
-            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel2.Location = new System.Drawing.Point(403, 53);
-            this.panel2.Name = "panel2";
-            this.panel2.Size = new System.Drawing.Size(394, 44);
-            this.panel2.TabIndex = 4;
-            // 
-            // btnPesquisar
-            // 
-            this.btnPesquisar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnPesquisar.Location = new System.Drawing.Point(310, 8);
-            this.btnPesquisar.Name = "btnPesquisar";
-            this.btnPesquisar.Size = new System.Drawing.Size(75, 23);
-            this.btnPesquisar.TabIndex = 4;
-            this.btnPesquisar.Text = "Pesquisar";
-            this.btnPesquisar.UseVisualStyleBackColor = true;
-            this.btnPesquisar.Click += new System.EventHandler(this.btnPesquisar_Click);
-            // 
-            // panel3
-            // 
-            this.panel3.Controls.Add(this.lblStatus);
-            this.panel3.Controls.Add(this.cmbStatusCliente);
-            this.panel3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel3.Location = new System.Drawing.Point(403, 3);
-            this.panel3.Name = "panel3";
-            this.panel3.Size = new System.Drawing.Size(394, 44);
-            this.panel3.TabIndex = 5;
-            // 
-            // cmbStatusCliente
-            // 
-            this.cmbStatusCliente.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.cmbStatusCliente.FormattingEnabled = true;
-            this.cmbStatusCliente.Items.AddRange(new object[] {
-            "Todos",
-            "Ativo",
-            "Inativo"});
-            this.cmbStatusCliente.Location = new System.Drawing.Point(270, 8);
-            this.cmbStatusCliente.Name = "cmbStatusCliente";
-            this.cmbStatusCliente.Size = new System.Drawing.Size(121, 21);
-            this.cmbStatusCliente.TabIndex = 0;
-            // 
-            // lblStatus
-            // 
-            this.lblStatus.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblStatus.AutoSize = true;
-            this.lblStatus.Location = new System.Drawing.Point(227, 12);
-            this.lblStatus.Name = "lblStatus";
-            this.lblStatus.Size = new System.Drawing.Size(37, 13);
-            this.lblStatus.TabIndex = 1;
-            this.lblStatus.Text = "Status";
-            // 
             // btnEditar
             // 
             this.btnEditar.Anchor = System.Windows.Forms.AnchorStyles.Right;
@@ -274,6 +274,7 @@
             this.btnExcluir.TabIndex = 2;
             this.btnExcluir.Text = "Excluir";
             this.btnExcluir.UseVisualStyleBackColor = true;
+            this.btnExcluir.Click += new System.EventHandler(this.btnExcluir_Click);
             // 
             // FrmCliente
             // 
@@ -288,9 +289,6 @@
             this.Text = "Cliente";
             this.Load += new System.EventHandler(this.FrmCliente_Load);
             this.TblTop.ResumeLayout(false);
-            this.TblMid.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();
-            this.TblBot.ResumeLayout(false);
             this.pnlNome.ResumeLayout(false);
             this.pnlNome.PerformLayout();
             this.panel1.ResumeLayout(false);
@@ -298,6 +296,9 @@
             this.panel2.ResumeLayout(false);
             this.panel3.ResumeLayout(false);
             this.panel3.PerformLayout();
+            this.TblMid.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvClientes)).EndInit();
+            this.TblBot.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }

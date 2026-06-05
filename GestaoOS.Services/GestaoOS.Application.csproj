@@ -41,6 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTORelatorio\ComboBoxItemDto.cs" />
+    <Compile Include="DTORelatorio\RelatorioOrdemServicoDto.cs" />
+    <Compile Include="DTORelatorio\RelatorioOrdemServicoFiltroDto.cs" />
     <Compile Include="DTOs\ClientePesquisaDto.cs" />
     <Compile Include="DTOs\OrdemServicoAtualizacaoDto.cs" />
     <Compile Include="DTOs\OrdemServicoEdicaoDto.cs" />
@@ -57,6 +60,8 @@
     <Compile Include="Interface\IClienteService.cs" />
     <Compile Include="Interface\IOrdemServicoRepository.cs" />
     <Compile Include="Interface\IOrdemServicoService.cs" />
+    <Compile Include="Interface\IRelatorioOsRepository.cs" />
+    <Compile Include="Interface\IRelatorioOsService.cs" />
     <Compile Include="Interface\IServicoRepository.cs" />
     <Compile Include="Interface\IServicoService.cs" />
     <Compile Include="DTOs\OrdemServicoCadastroDto.cs" />
@@ -64,6 +69,7 @@
     <Compile Include="Result.cs" />
     <Compile Include="Services\ClienteService.cs" />
     <Compile Include="Services\OrdemServicoService.cs" />
+    <Compile Include="Services\RelatorioOsService.cs" />
     <Compile Include="Services\ServicoService.cs" />
   </ItemGroup>
   <ItemGroup>

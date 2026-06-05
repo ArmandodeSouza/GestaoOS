@@ -46,6 +46,7 @@
             this.btnEditarOs = new System.Windows.Forms.Button();
             this.tblMid = new System.Windows.Forms.TableLayoutPanel();
             this.dgvOs = new System.Windows.Forms.DataGridView();
+            this.relatóriosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.tblTop.SuspendLayout();
             this.pnlTipoPesquisa.SuspendLayout();
@@ -59,7 +60,8 @@
             // 
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.clienteToolStripMenuItem,
-            this.servicoToolStripMenuItem});
+            this.servicoToolStripMenuItem,
+            this.relatóriosToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
             this.menuStrip1.Size = new System.Drawing.Size(800, 24);
@@ -292,6 +294,13 @@
             this.dgvOs.Size = new System.Drawing.Size(794, 217);
             this.dgvOs.TabIndex = 0;
             // 
+            // relatóriosToolStripMenuItem
+            // 
+            this.relatóriosToolStripMenuItem.Name = "relatóriosToolStripMenuItem";
+            this.relatóriosToolStripMenuItem.Size = new System.Drawing.Size(71, 20);
+            this.relatóriosToolStripMenuItem.Text = "Relatórios";
+            this.relatóriosToolStripMenuItem.Click += new System.EventHandler(this.relatóriosToolStripMenuItem_Click);
+            // 
             // FrmMain
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -346,6 +355,7 @@
         private System.Windows.Forms.DateTimePicker dtpDataFinal;
         private System.Windows.Forms.DateTimePicker dtpDataInicial;
         private System.Windows.Forms.Label lblDataFinal;
+        private System.Windows.Forms.ToolStripMenuItem relatóriosToolStripMenuItem;
     }
 }
 

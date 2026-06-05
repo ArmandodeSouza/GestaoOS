@@ -14,11 +14,9 @@ namespace GestaoOS.Domain.Entities {
 
         private OrdemServicoHistoricoStatus() { }
 
-        public OrdemServicoHistoricoStatus(StatusOrdemServicoDom statusAnterior, StatusOrdemServicoDom statusNovo, string usuario) {
-            if (string.IsNullOrWhiteSpace(usuario))
-                throw new ArgumentException("Usuário é obrigatório.");
+        public OrdemServicoHistoricoStatus(StatusOrdemServicoDom statusAnterior, StatusOrdemServicoDom statusNovo) {
 
-            StatusAnterior = null;
+            StatusAnterior = statusAnterior;
             StatusNovo = statusNovo;
             Usuario = null;
             DataHora = DateTime.Now;

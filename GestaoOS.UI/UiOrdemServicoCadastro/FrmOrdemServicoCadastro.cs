@@ -10,6 +10,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -206,12 +207,12 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
         }
         private async void btnSalvarOs_Click(object sender, EventArgs e) {
             await SalvarAsync();
-            cmbStatusOs.SelectedItem = StatusOrdemServico.EmAndamento;
 
         }
 
         private void cmbStatusOs_SelectedIndexChanged(object sender, EventArgs e) {
             btnFinalizarOs.Enabled = true == cmbStatusOs.SelectedItem?.Equals(StatusOrdemServico.EmAndamento);
+            btnFinalizarOs.Enabled = true == cmbStatusOs.SelectedItem?.Equals(StatusOrdemServico.Aberta);
         }
 
         private void txtCliente_TextChanged(object sender, EventArgs e) {
@@ -392,6 +393,7 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
                     return;
                 }
 
+                cmbStatusOs.Enabled = true;
                 MessageBox.Show("Ordem de Serviço atualizada com sucesso.");
                 Close();
                 return;
@@ -407,18 +409,16 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
             _ordemServicoId = resultadoCadastro.Value;
             _modoEdicao = true;
 
+            cmbStatusOs.SelectedItem = StatusOrdemServico.EmAndamento;
+            cmbStatusOs.Enabled = true;
             MessageBox.Show("Ordem de Serviço cadastrada com sucesso.");
         }
 
         private async void btnFinalizarOs_Click(object sender, EventArgs e) {
             await FinalizarOsAsync();
 
-            cmbStatusOs.SelectedItem = StatusOrdemServico.Concluida;
-            mskDataConclusao.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
-            DesabilitarCamposOs();
 
-            MessageBox.Show("Ordem de Serviço finalizada com sucesso.");
         }
 
         private async Task FinalizarOsAsync() {
@@ -427,9 +427,7 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
                 return;
             }
 
-            var resultado = await _ordemServicoService.ConcluirAsync(
-                _ordemServicoId,
-                Environment.UserName
+            var resultado = await _ordemServicoService.ConcluirAsync(_ordemServicoId, Environment.UserName
             );
 
             if (!resultado.Success) {
@@ -438,11 +436,13 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
             }
 
             cmbStatusOs.SelectedItem = StatusOrdemServico.Concluida;
+            mskDataConclusao.Text = DateTime.Now.ToString("dd/MM/yyyy");
 
             DesabilitarCamposOs();
 
             MessageBox.Show("Ordem de Serviço finalizada com sucesso.");
 
+            btnReabrirOs.Enabled = true;
 
         }
 
@@ -455,6 +455,8 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
             btnAddItem.Enabled = false;
             btnSalvarOs.Enabled = false;
             btnFinalizarOs.Enabled = false;
+            btnCancelarOs.Enabled = false;
+
 
             dgvItensOS.Enabled = false;
             cmbStatusOs.Enabled = false;
@@ -488,5 +490,38 @@ namespace GestaoOS.UI.UiOrdemServicoCadastro {
 
             MessageBox.Show("Ordem de Serviço cancelada com sucesso.");
         }
+
+        private void dgvItensOS_CellContentClick(object sender, DataGridViewCellEventArgs e) {
+            if (e.RowIndex < 0 || e.ColumnIndex < 0)
+                return;
+            if (dgvItensOS.Columns[e.ColumnIndex].Name == "colRemover") {
+                var item = _itensGrid[e.RowIndex];
+                var confirmacao = MessageBox.Show(
+                    $"Deseja remover o item '{item.NomeServico}' da ordem de serviço?",
+                    "Remover Item",
+                    MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Question);
+                if (confirmacao != DialogResult.Yes)
+                    return;
+                _itensGrid.RemoveAt(e.RowIndex);
+                CarregarGridItens();
+                AtualizarTotalOs();
+            }
+        }
+
+        private async void btnReabrirOs_Click(object sender, EventArgs e) {
+            cmbStatusOs.SelectedItem = StatusOrdemServico.EmAndamento;
+
+            await _ordemServicoService.ReabrirAsync(_ordemServicoId);
+        }
+
+        private void AtualizarBotoes() {
+            btnReabrirOs.Enabled = false;
+
+            if (cmbStatusOs.SelectedItem.Equals(StatusOrdemServico.Concluida) || cmbStatusOs.SelectedItem.Equals(StatusOrdemServico.Cancelada))
+                btnReabrirOs.Enabled = true;
+
+        }
+
     }
 }
